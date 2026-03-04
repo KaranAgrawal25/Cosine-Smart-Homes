@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COSINE | Intelligent Networking Environment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00f3ff;
+            --secondary: #7b2ff7;
+            --accent: #ff006e;
+            --bg-dark: #0a0e27;
+            --bg-card: rgba(15, 23, 42, 0.8);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --danger: #ff3366;
+            --grid-color: rgba(0, 243, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse at top, rgba(123, 47, 247, 0.2), transparent 50%),
+                radial-gradient(ellipse at bottom, rgba(0, 243, 255, 0.15), transparent 50%),
+                linear-gradient(180deg, #0a0e27 0%, #1a1f3a 100%);
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridScroll 20s linear infinite;
+            opacity: 0.3;
+        }
+
+        @keyframes gridScroll {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(50px); }
+        }
+
+        /* Header */
+        .header {
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.5rem;
+            text-shadow: 0 0 80px rgba(0, 243, 255, 0.5);
+            animation: glow 3s ease-in-out infinite alternate;
+            margin-bottom: 0.5rem;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(0, 243, 255, 0.5)); }
+            to { filter: drop-shadow(0 0 40px rgba(123, 47, 247, 0.8)); }
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.3rem;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* User Info Bar */
+        .user-bar {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+        }
+
+        .user-details h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .user-role {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .system-status {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .status-dot.online { background: var(--success); }
+        .status-dot.offline { background: var(--danger); }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Dashboard Grid */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 24px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.1) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 12px 48px rgba(0, 243, 255, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+        }
+
+        .card-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+        }
+
+        .badge-connected {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .badge-disconnected {
+            background: rgba(255, 51, 102, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        .badge-active {
+            background: rgba(0, 243, 255, 0.2);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            font-family: 'Rajdhani', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 8px 24px rgba(0, 243, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0, 243, 255, 0.5);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #00cc70);
+            color: white;
+            box-shadow: 0 8px 24px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #cc0044);
+            color: white;
+            box-shadow: 0 8px 24px rgba(255, 51, 102, 0.3);
+        }
+
+        .btn-voice {
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            color: white;
+            box-shadow: 0 8px 24px rgba(255, 0, 110, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Control Groups */
+        .control-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        /* Status Display */
+        .status-display {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            margin-top: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+        }
+
+        .status-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .status-on {
+            color: var(--success);
+            text-shadow: 0 0 10px var(--success);
+        }
+
+        .status-off {
+            color: var(--danger);
+        }
+
+        /* Speed Control Slider */
+        .speed-control {
+            margin-top: 1.5rem;
+        }
+
+        .speed-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .speed-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .slider-container {
+            position: relative;
+            height: 60px;
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: linear-gradient(to right, var(--danger), var(--warning), var(--success));
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 1);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.8);
+            border: none;
+        }
+
+        .speed-markers {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Temperature Display */
+        .temp-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            border: 2px solid rgba(0, 243, 255, 0.3);
+            margin-top: 1rem;
+        }
+
+        .temp-value {
+            font-size: 4rem;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .temp-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2rem;
+        }
+
+        .temp-status {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .temp-cool {
+            background: rgba(0, 243, 255, 0.2);
+            color: var(--primary);
+        }
+
+        .temp-normal {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+        }
+
+        .temp-warm {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--warning);
+        }
+
+        /* Voice Command */
+        .voice-commands {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 0, 110, 0.3);
+        }
+
+        .voice-commands h4 {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+        }
+
+        .command-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .command-chip {
+            padding: 0.4rem 0.8rem;
+            background: rgba(255, 0, 110, 0.2);
+            border: 1px solid var(--accent);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--accent);
+        }
+
+        .listening-indicator {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 0, 110, 0.2);
+            border-radius: 12px;
+            animation: listening 1.5s ease-in-out infinite;
+        }
+
+        .listening-indicator.active {
+            display: flex;
+        }
+
+        @keyframes listening {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .listening-wave {
+            width: 4px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 2px;
+            animation: wave 1s ease-in-out infinite;
+        }
+
+        .listening-wave:nth-child(2) { animation-delay: 0.1s; }
+        .listening-wave:nth-child(3) { animation-delay: 0.2s; }
+        .listening-wave:nth-child(4) { animation-delay: 0.3s; }
+
+        @keyframes wave {
+            0%, 100% { height: 20px; }
+            50% { height: 40px; }
+        }
+
+        /* Notification Popup */
+        .notification {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1.5rem 2rem;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--primary);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 243, 255, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transform: translateX(400px);
+            transition: transform 0.5s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-icon {
+            font-size: 2rem;
+        }
+
+        .notification-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(0, 243, 255, 0.1);
+            margin-top: 3rem;
+        }
+
+        .footer-brand {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+                letter-spacing: 0.3rem;
+            }
+
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .user-bar {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .system-status {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .notification {
+                bottom: 1rem;
+                right: 1rem;
+                left: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    <div class="grid-overlay"></div>
+
+    <div class="header">
+        <h1 class="logo">COSINE</h1>
+        <p class="tagline">Control of Systems with Intelligent Networking Environment</p>
+        <p class="subtitle">Advanced Smart Home Management System</p>
+    </div>
+
+    <div class="container">
+        <!-- User Info Bar -->
+        <div class="user-bar">
+            <div class="user-info">
+                <div class="user-avatar">CS</div>
+                <div class="user-details">
+                    <h3>COSINE User</h3>
+                    <p class="user-role">System Administrator</p>
+                </div>
+            </div>
+            <div class="system-status">
+                <div class="status-item">
+                    <div class="status-dot online"></div>
+                    <span>System Online</span>
+                </div>
+                <div class="status-item">
+                    <div class="status-dot" id="bluetoothStatusDot"></div>
+                    <span id="bluetoothStatusText">Bluetooth Disconnected</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Cards -->
+        <div class="dashboard">
+            <!-- Bluetooth Connection Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-icon">📡</span>
+                        <span>Bluetooth</span>
+                    </div>
+                    <span class="card-badge badge-disconnected" id="bluetoothBadge">Disconnected</span>
+                </div>
+                <button class="btn btn-primary" id="bluetoothBtn" onclick="connectBluetooth()">
+                    <span>Connect Bluetooth</span>
+                </button>
+                <div class="status-display">
+                    <span class="status-label">Connection Status</span>
+                    <span class="status-value status-off" id="bluetoothStatus">OFFLINE</span>
+                </div>
+            </div>
+
+            <!-- Fan Control Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-icon">🌀</span>
+                        <span>Fan Control</span>
+                    </div>
+                    <span class="card-badge badge-disconnected" id="fanBadge">OFF</span>
+                </div>
+                <div class="control-group">
+                    <button class="btn btn-success" onclick="toggleFan(true)">
+                        <span>Turn ON</span>
+                    </button>
+                    <button class="btn btn-danger" onclick="toggleFan(false)">
+                        <span>Turn OFF</span>
+                    </button>
+                </div>
+                <div class="status-display">
+                    <span class="status-label">Fan Status</span>
+                    <span class="status-value status-off" id="fanStatus">OFF</span>
+                </div>
+
+                <!-- Speed Control -->
+                <div class="speed-control">
+                    <div class="speed-label">
+                        <span>Fan Speed</span>
+                        <span class="speed-value" id="speedValue">0</span>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" min="0" max="5" value="0" id="speedSlider" oninput="updateSpeed(this.value)">
+                    </div>
+                    <div class="speed-markers">
+                        <span>OFF</span>
+                        <span>1</span>
+                        <span>2</span>
+                        <span>3</span>
+                        <span>4</span>
+                        <span>5</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Light Control Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-icon">💡</span>
+                        <span>Light Control</span>
+                    </div>
+                    <span class="card-badge badge-disconnected" id="lightBadge">OFF</span>
+                </div>
+                <div class="control-group">
+                    <button class="btn btn-success" onclick="toggleLight(true)">
+                        <span>Turn ON</span>
+                    </button>
+                    <button class="btn btn-danger" onclick="toggleLight(false)">
+                        <span>Turn OFF</span>
+                    </button>
+                </div>
+                <div class="status-display">
+                    <span class="status-label">Light Status</span>
+                    <span class="status-value status-off" id="lightStatus">OFF</span>
+                </div>
+            </div>
+
+            <!-- Temperature Sensor Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-icon">🌡️</span>
+                        <span>Temperature Sensor</span>
+                    </div>
+                    <span class="card-badge badge-active">Active</span>
+                </div>
+                <div class="temp-display">
+                    <div class="temp-value" id="tempValue">24°</div>
+                    <div class="temp-label">Current Temperature</div>
+                    <div class="temp-status temp-normal" id="tempStatus">Comfortable</div>
+                </div>
+                <div class="status-display">
+                    <span class="status-label">Auto Speed Control</span>
+                    <span class="status-value status-on" id="autoStatus">ENABLED</span>
+                </div>
+            </div>
+
+            <!-- Voice Control Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-icon">🎙️</span>
+                        <span>Voice Control</span>
+                    </div>
+                    <span class="card-badge badge-active">Ready</span>
+                </div>
+                <button class="btn btn-voice" id="voiceBtn" onclick="startVoiceControl()">
+                    <span>Start Voice Command</span>
+                </button>
+                
+                <div class="listening-indicator" id="listeningIndicator">
+                    <div class="listening-wave"></div>
+                    <div class="listening-wave"></div>
+                    <div class="listening-wave"></div>
+                    <div class="listening-wave"></div>
+                    <span>Listening...</span>
+                </div>
+
+                <div class="voice-commands">
+                    <h4>Available Commands:</h4>
+                    <div class="command-list">
+                        <span class="command-chip">"Fan On"</span>
+                        <span class="command-chip">"Fan Off"</span>
+                        <span class="command-chip">"Light On"</span>
+                        <span class="command-chip">"Light Off"</span>
+                        <span class="command-chip">"Speed [1-5]"</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <span class="notification-icon" id="notificationIcon">✓</span>
+        <span class="notification-text" id="notificationText"></span>
+    </div>
+
+    <div class="footer">
+        <p>Â© 2026 <span class="footer-brand">COSINE</span> Project | Intelligent Home Automation System</p>
+        <p>Designed for Advanced Smart Home Management</p>
+    </div>
+
+    <script>
+        // State Management
+        let state = {
+            bluetooth: false,
+            fan: false,
+            light: false,
+            speed: 0,
+            temperature: 24,
+            autoSpeed: true
+        };
+
+        // Bluetooth Connection
+        function connectBluetooth() {
+            if (state.bluetooth) return;
+            
+            state.bluetooth = true;
+            document.getElementById('bluetoothBadge').textContent = 'Connected';
+            document.getElementById('bluetoothBadge').className = 'card-badge badge-connected';
+            document.getElementById('bluetoothStatus').textContent = 'ONLINE';
+            document.getElementById('bluetoothStatus').className = 'status-value status-on';
+            document.getElementById('bluetoothStatusDot').className = 'status-dot online';
+            document.getElementById('bluetoothStatusText').textContent = 'Bluetooth Connected';
+            document.getElementById('bluetoothBtn').innerHTML = '<span>Connected ✓</span>';
+            document.getElementById('bluetoothBtn').disabled = true;
+            document.getElementById('bluetoothBtn').style.opacity = '0.7';
+            
+            showNotification('📡 Bluetooth Connected Successfully', '✓');
+        }
+
+        // Fan Control
+        function toggleFan(turnOn) {
+            if (!state.bluetooth) {
+                showNotification('⚠️ Please connect Bluetooth first', '⚠');
+                return;
+            }
+
+            state.fan = turnOn;
+            const badge = document.getElementById('fanBadge');
+            const status = document.getElementById('fanStatus');
+            
+            if (turnOn) {
+                badge.textContent = 'ON';
+                badge.className = 'card-badge badge-connected';
+                status.textContent = 'ON';
+                status.className = 'status-value status-on';
+                if (state.speed === 0) {
+                    updateSpeed(3); // Default speed
+                    document.getElementById('speedSlider').value = 3;
+                }
+                showNotification('🌀 Fan Turned ON', '✓');
+            } else {
+                badge.textContent = 'OFF';
+                badge.className = 'card-badge badge-disconnected';
+                status.textContent = 'OFF';
+                status.className = 'status-value status-off';
+                updateSpeed(0);
+                document.getElementById('speedSlider').value = 0;
+                showNotification('🌀 Fan Turned OFF', '✓');
+            }
+        }
+
+        // Light Control
+        function toggleLight(turnOn) {
+            if (!state.bluetooth) {
+                showNotification('⚠️ Please connect Bluetooth first', '⚠');
+                return;
+            }
+
+            state.light = turnOn;
+            const badge = document.getElementById('lightBadge');
+            const status = document.getElementById('lightStatus');
+            
+            if (turnOn) {
+                badge.textContent = 'ON';
+                badge.className = 'card-badge badge-connected';
+                status.textContent = 'ON';
+                status.className = 'status-value status-on';
+                showNotification('💡 Light Turned ON', '✓');
+            } else {
+                badge.textContent = 'OFF';
+                badge.className = 'card-badge badge-disconnected';
+                status.textContent = 'OFF';
+                status.className = 'status-value status-off';
+                showNotification('💡 Light Turned OFF', '✓');
+            }
+        }
+
+        // Speed Control
+        function updateSpeed(speed) {
+            if (!state.bluetooth) {
+                showNotification('⚠️ Please connect Bluetooth first', '⚠');
+                document.getElementById('speedSlider').value = state.speed;
+                return;
+            }
+
+            state.speed = parseInt(speed);
+            document.getElementById('speedValue').textContent = speed;
+            
+            if (speed > 0 && !state.fan) {
+                state.fan = true;
+                document.getElementById('fanBadge').textContent = 'ON';
+                document.getElementById('fanBadge').className = 'card-badge badge-connected';
+                document.getElementById('fanStatus').textContent = 'ON';
+                document.getElementById('fanStatus').className = 'status-value status-on';
+            } else if (speed == 0 && state.fan) {
+                state.fan = false;
+                document.getElementById('fanBadge').textContent = 'OFF';
+                document.getElementById('fanBadge').className = 'card-badge badge-disconnected';
+                document.getElementById('fanStatus').textContent = 'OFF';
+                document.getElementById('fanStatus').className = 'status-value status-off';
+            }
+            
+            showNotification(`⚡ Fan Speed Set to ${speed}`, '✓');
+        }
+
+        // Voice Control
+        function startVoiceControl() {
+            if (!state.bluetooth) {
+                showNotification('⚠️ Please connect Bluetooth first', '⚠');
+                return;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
+            if (!SpeechRecognition) {
+                showNotification('❌ Voice recognition not supported in this browser', '❌');
+                alert('Voice recognition is only supported in Chrome and Edge browsers.');
+                return;
+            }
+
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.continuous = false;
+            recognition.interimResults = false;
+
+            document.getElementById('listeningIndicator').classList.add('active');
+            document.getElementById('voiceBtn').innerHTML = '<span>Listening...</span>';
+            document.getElementById('voiceBtn').disabled = true;
+
+            recognition.start();
+
+            recognition.onresult = (event) => {
+                const command = event.results[0][0].transcript.toLowerCase();
+                console.log('Voice command:', command);
+                processVoiceCommand(command);
+                stopListening();
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                showNotification('❌ Voice recognition error. Please try again.', '❌');
+                stopListening();
+            };
+
+            recognition.onend = () => {
+                stopListening();
+            };
+        }
+
+        function stopListening() {
+            document.getElementById('listeningIndicator').classList.remove('active');
+            document.getElementById('voiceBtn').innerHTML = '<span>Start Voice Command</span>';
+            document.getElementById('voiceBtn').disabled = false;
+        }
+
+        function processVoiceCommand(command) {
+            if (command.includes('fan on') || command.includes('turn on fan')) {
+                toggleFan(true);
+            } else if (command.includes('fan off') || command.includes('turn off fan')) {
+                toggleFan(false);
+            } else if (command.includes('light on') || command.includes('turn on light')) {
+                toggleLight(true);
+            } else if (command.includes('light off') || command.includes('turn off light')) {
+                toggleLight(false);
+            } else if (command.includes('speed')) {
+                const speedMatch = command.match(/speed\s+(\d)/);
+                if (speedMatch) {
+                    const speed = parseInt(speedMatch[1]);
+                    if (speed >= 0 && speed <= 5) {
+                        updateSpeed(speed);
+                        document.getElementById('speedSlider').value = speed;
+                    }
+                }
+            } else {
+                showNotification('❓ Command not recognized. Please try again.', '❓');
+            }
+        }
+
+        // Temperature Simulation
+        function updateTemperature() {
+            // Simulate temperature fluctuation
+            const variation = (Math.random() - 0.5) * 2;
+            state.temperature = Math.max(18, Math.min(35, state.temperature + variation));
+            
+            const tempValue = document.getElementById('tempValue');
+            const tempStatus = document.getElementById('tempStatus');
+            
+            tempValue.textContent = Math.round(state.temperature) + '°';
+            
+            if (state.temperature < 22) {
+                tempStatus.textContent = 'Cool';
+                tempStatus.className = 'temp-status temp-cool';
+            } else if (state.temperature < 28) {
+                tempStatus.textContent = 'Comfortable';
+                tempStatus.className = 'temp-status temp-normal';
+            } else {
+                tempStatus.textContent = 'Warm';
+                tempStatus.className = 'temp-status temp-warm';
+            }
+
+            // Auto speed control based on temperature
+            if (state.autoSpeed && state.bluetooth && state.fan) {
+                let autoSpeed = 0;
+                if (state.temperature > 30) autoSpeed = 5;
+                else if (state.temperature > 28) autoSpeed = 4;
+                else if (state.temperature > 26) autoSpeed = 3;
+                else if (state.temperature > 24) autoSpeed = 2;
+                else if (state.temperature > 22) autoSpeed = 1;
+                
+                if (autoSpeed !== state.speed) {
+                    updateSpeed(autoSpeed);
+                    document.getElementById('speedSlider').value = autoSpeed;
+                }
+            }
+        }
+
+        // Notification System
+        function showNotification(message, icon) {
+            const notification = document.getElementById('notification');
+            const notificationIcon = document.getElementById('notificationIcon');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationIcon.textContent = icon;
+            notificationText.textContent = message;
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize
+        setInterval(updateTemperature, 5000);
+        updateTemperature();
+
+        // Initial welcome message
+        setTimeout(() => {
+            showNotification('👋 Welcome to COSINE Smart Home System', '🚀');
+        }, 500);
+    </script>
+</body>
+</html>
