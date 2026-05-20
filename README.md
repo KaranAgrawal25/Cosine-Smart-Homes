@@ -261,20 +261,6 @@ firebase deploy
 
 ---
 
-# 👨‍💻 Team
-
-**Agrawal Karan R**  
-Project Lead  
-MQTT Architecture, Firebase Deployment, Web Dashboard, Surveillance Integration
-
-**Ravikumar**  
-ESP8266 Firmware, Servo Control Logic, IR Sensor Integration
-
-**D. Chand Akarsh**  
-Hardware Design, Circuit Wiring, Servo Mounting
-
----
-
 # 📜 License
 
 This project is open-source and available under the **MIT License**.
